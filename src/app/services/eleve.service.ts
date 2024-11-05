@@ -4,6 +4,7 @@ import { Ecole } from '../model/ecole.model';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ecolewarpper } from '../model/ecolewarpper';
+import { AuthService } from './auth.service';
 
 
 const httpOptions = {
@@ -18,16 +19,16 @@ export class EleveService {
   apiURL: string = 'http://localhost:8090/eleves/api';
   apiURLeco: string = 'http://localhost:8090/eleves/eco';
   eleves! : eleve[]; 
-  //ecoles: Ecole[];
+  ecoles: Ecole[];
   eleve!:eleve;
   
-  constructor(private http : HttpClient) {
+  constructor(private http : HttpClient, private authService : AuthService) {
     
-   /* this.ecoles = [
+   this.ecoles = [
       {id : 1, nom : "hedi chaker",adresse:"nabeul"},
       {id : 2, nom : "raoutha",adresse:"grombalia"},
       {id : 3, nom : "liberte",adresse:"gromnab"},
-    ];*/
+    ];
 
     /*this.eleves = [
       {id : 1, nom : "PC Asus",classe:"1ere", age: 6,ecole:{id : 1, nom : "hedi chaker",adresse:"nabeul"}},
@@ -40,42 +41,65 @@ export class EleveService {
 
 
 
-    listeeleves(): Observable<eleve[]>{
-      return this.http.get<eleve[]>(this.apiURL);
-      }
-
-
+      
+      listeeleves(): Observable<eleve[]>{
+        /*let jwt = this.authService.getToken();
+        jwt = "Bearer "+jwt;
+        let httpHeaders = new HttpHeaders({"Authorization":jwt}) 
+       */
+         return this.http.get<eleve[]>(this.apiURL+"/all"/*,{headers:httpHeaders}*/);
     
-      ajoutereleve( e: eleve):Observable<eleve>{
-        return this.http.post<eleve>(this.apiURL, e, httpOptions);
         }
 
+    
+      
    
       
-      supprimereleve(id : number) {
-          const url = `${this.apiURL}/${id}`;
-          return this.http.delete(url, httpOptions);
+        ajoutereleve( e: eleve):Observable<eleve>{
+          let jwt = this.authService.getToken();
+          jwt = "Bearer "+jwt;
+          let httpHeaders = new HttpHeaders({"Authorization":jwt}) 
+            return this.http.post<eleve>(this.apiURL+"/addeleve", e, {headers:httpHeaders});
           }
-  
 
+
+      
+  
+          supprimereleve(id : number) {
+            const url = `${this.apiURL}/deleleve/${id}`;
+             let jwt = this.authService.getToken();
+             jwt = "Bearer "+jwt;
+             let httpHeaders = new HttpHeaders({"Authorization":jwt}) 
+               return this.http.delete(url,  {headers:httpHeaders});
+             }
 
       
         
       
-        consulterEleve(id: number): Observable<eleve> {
-          const url = `${this.apiURL}/${id}`;
-          return this.http.get<eleve>(url);
-          }
+        
 
-
+          consulterEleve(id: number): Observable<eleve> {
+            const url = `${this.apiURL}/getbyid/${id}`;
+            console.log(url);
+            let jwt = this.authService.getToken();
+            jwt = "Bearer "+jwt;
+            let httpHeaders = new HttpHeaders({"Authorization":jwt}) 
+              return this.http.get<eleve>(url,{headers:httpHeaders});
+            }
 
 
           
-          updateeleve(e :eleve) : Observable<eleve>
-          {
-              return this.http.put<eleve>(this.apiURL, e, httpOptions);
-          }
+          
 
+
+          updateeleve(e :eleve) : Observable<eleve>    {
+            console.log("eleve "+e);
+             console.log(e.ecole);
+               let jwt = this.authService.getToken();
+               jwt = "Bearer "+jwt;
+               let httpHeaders = new HttpHeaders({"Authorization":jwt}) 
+                 return this.http.put<eleve>(this.apiURL+"/updeleve", e, {headers:httpHeaders});
+               }
          
           
 
@@ -94,22 +118,39 @@ export class EleveService {
 
              
 
-            listeecoles(): Observable<ecolewarpper> {
-              return this.http.get<ecolewarpper>(this.apiURLeco);
-          }
+            
+
+          listeecoles():Observable<ecolewarpper>{
+            let jwt = this.authService.getToken();
+            jwt = "Bearer "+jwt;
+            let httpHeaders = new HttpHeaders({"Authorization":jwt})
+            return  this.http.get<ecolewarpper>(this.apiURLeco,{headers:httpHeaders});
+            
+                }     
           
 
-          rechercherParEcole(id: number): Observable<eleve[]> {
-            const url = `${this.apiURL}/eleveco/${id}`;
-            return this.http.get<[eleve]>(url);
-          } 
+          
 
-          rechercherParNom(nom: string):Observable< eleve[]> {
-            const url = `${this.apiURL}/elevebynom/${nom}`;
-            return this.http.get<eleve[]>(url);
+           /* rechercherParEcole(idCat: number): Observable<eleve[]> {
+                  const url = `${this.apiURL}/eleveco/${idCat}`;
+                  let jwt = this.authService.getToken();
+                  jwt = "Bearer "+jwt;
+                  let httpHeaders = new HttpHeaders({"Authorization":jwt}) 
+                  return this.http.get<eleve[]>(url, {headers:httpHeaders}); // Ajout du token JWT
+              }*/
+
+              rechercherParEcole(idCat: number): Observable<eleve[]> { 
+                const url = `${this.apiURL}/eleveco/${idCat}`; 
+                return this.http.get<eleve[]>(url); 
+                }  
+
+              rechercherParNom(nom: string): Observable<eleve[]> {
+                const url = `${this.apiURL}/elevebynom/${nom}`;
+                return this.http.get<eleve[]>(url);
             }
 
-
+            
+           
             ajouterecole( cat: Ecole):Observable<Ecole>{
               return this.http.post<Ecole>(this.apiURLeco, cat, httpOptions);
              }

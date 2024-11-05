@@ -19,22 +19,21 @@ export class RechercheParEcoleComponent implements OnInit{
   constructor(private eleveService : EleveService) { }
 
   
-  ngOnInit(): void {
   
-    this.eleveService.listeecoles().subscribe(response => {
-      this.ecoles = response._embedded.ecoles; 
-      console.log(response);
+  ngOnInit(): void {
+    this.eleveService.listeecoles().subscribe(cats => {this.ecoles = cats._embedded.ecoles;
+      console.log(cats);
     });
-  }
 
+  }
  
+  
+
     onChange() {
-      
-      this.eleveService.rechercherParEcole(this.IdEcole).subscribe(eleveData => {
-        this.eleves = eleveData;  
-        console.log(this.eleves);
-      });
-    }
+      this.eleveService.rechercherParEcole(this.IdEcole).
+        subscribe(eleves =>{this.eleves=eleves});
+  
+      }
 
   
 }

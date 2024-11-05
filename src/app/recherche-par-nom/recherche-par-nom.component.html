@@ -60,7 +60,7 @@
               <td>{{ eleve.ecole.nom }}</td>
               <!-- Uncomment these if needed -->
               
-              <td>
+              <td *ngIf="authService.isAdmin()">
                 <button class="btn btn-success btn-sm" [routerLink]="['/updateeleve', eleve.id]">Modifier</button>
                 <button class="btn btn-danger btn-sm" (click)="supprimereleve(eleve)">Supprimer</button>
               </td>

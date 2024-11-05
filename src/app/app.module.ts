@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { ElevesComponent } from './eleves/eleves.component';
 import { AddEleveComponent } from './add-eleve/add-eleve.component';
 import { UpdateEleveComponent } from './update-eleve/update-eleve.component';
-import { HttpClientModule } from '@angular/common/http';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { RechercheParEcoleComponent } from './recherche-par-ecole/recherche-par-ecole.component';
 import { RechercheParNomComponent } from './recherche-par-nom/recherche-par-nom.component';
@@ -15,6 +14,8 @@ import { ListeEcolesComponent } from './liste-ecoles/liste-ecoles.component';
 import { UpdateecoleComponent } from './updateecole/updateecole.component';
 import { LoginComponent } from './login/login.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
+import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { tokenInterceptor } from './services/token.interceptor';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,9 @@ import { ForbiddenComponent } from './forbidden/forbidden.component';
     provideHttpClient(
       withFetch() // Enable fetch API
     ),
+    { provide : HTTP_INTERCEPTORS,
+      useClass : tokenInterceptor ,
+      multi : true}
   ],
   bootstrap: [AppComponent]
 })

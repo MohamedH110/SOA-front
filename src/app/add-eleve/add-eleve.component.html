@@ -20,7 +20,7 @@
             <input type="text" [(ngModel)]="newEleve.classe" name="classe" class="form-control">
         </div>
         <div class="col-sm-4 col-md-4 col-lg-4">
-            <label>ecoless</label>
+            <label>ecoles</label>
             <select class="form-control form-control-lg" id="idCat" name="idCat" [(ngModel)]="newIdEco">
                 <option *ngFor="let cat of ecoles" [value]="cat.id">
                     {{cat.nom}}

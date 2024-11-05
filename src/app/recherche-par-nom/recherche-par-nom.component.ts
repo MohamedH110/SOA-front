@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { eleve } from '../model/eleve.model';
 import { EleveService } from '../services/eleve.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-recherche-par-nom',
@@ -14,7 +15,7 @@ export class RechercheParNomComponent  implements OnInit {
   alleleves!: eleve[];
   searchTerm!: string;
 
-  constructor(private eleveService : EleveService) { }
+  constructor(private eleveService : EleveService,public authService: AuthService) { }
 
   ngOnInit(): void {
     this.eleveService.listeeleves().subscribe(prods => {
